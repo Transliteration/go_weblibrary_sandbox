@@ -5,9 +5,10 @@ import (
 	"io"
 	"net/http"
 	"strconv"
-	"weblibrary_sandbox/config"
 
 	"github.com/google/uuid"
+
+	"weblibrary_sandbox/models"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -43,10 +44,9 @@ func addUserHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newUser := User{
-		name:   name,
-		userID: uuid.New(),
-		age:    int(age),
+	newUser := models.User{
+		Name: name,
+		Age:  int(age),
 	}
 
 	err = addUser(newUser)
@@ -86,14 +86,23 @@ func getUserHandle(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(userID)
 	if err != nil {
 		log.Error(trace())
-		log.Error("Could not get user with ID = %v", userID)
+		log.Error("Could not get user with ID = ", userID)
 		return
 	}
 
-	sas := config.Kek
-	fmt.Println(sas)
+	responseMessage := fmt.Sprintf("Your user name is {%s}\n", user.Name)
+	io.WriteString(w, responseMessage)
+}
 
-	responseMessage := fmt.Sprintf("Your user name is {%s}\n", user.name)
+func getAllUsersHandle(w http.ResponseWriter, r *http.Request) {
+	users, err := getAllUsers()
+	if err != nil {
+		log.Error(trace())
+		log.Error("Could not get all users", err)
+		return
+	}
+
+	responseMessage := fmt.Sprintf("users: %v\n", users)
 	io.WriteString(w, responseMessage)
 }
 
@@ -102,6 +111,7 @@ func main() {
 
 	http.HandleFunc("/addUser/", addUserHandle)
 	http.HandleFunc("/getUser/", getUserHandle)
+	http.HandleFunc("/getAllUsers/", getAllUsersHandle)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
