@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"github.com/google/uuid"
@@ -11,26 +11,25 @@ import (
 // - список книг
 
 type User struct {
-	name   string
-	userID uuid.UUID
-	age    int
-	books  []uuid.UUID
+	UserID uuid.UUID
+	Name   string
+	Age    int
 }
 
 // Книга
 // - название
 // - жанр (опционально)
 
-type Genre int64
+// type Genre int64
 
-const (
-	Thriller Genre = iota
-	Comedy
-	Drama
-)
+// const (
+// 	Thriller Genre = iota
+// 	Comedy
+// 	Drama
+// )
 
 type Book struct {
-	bookID uuid.UUID
-	name   string
-	genre  []Genre
+	BookID uuid.UUID
+	Name   string
+	// genre  []Genre
 }
