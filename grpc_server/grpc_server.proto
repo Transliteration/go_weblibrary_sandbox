@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package grpc_server;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "./";
+
+// Interface exported by the server.
+service GigaService {
+  rpc GetUser(UserId) returns (User) {}
+  rpc GetAllUsers(google.protobuf.Empty) returns (Users) {}
+
+  rpc AddUser(User) returns (UserId) {}
+}
+
+message Response {
+  string message = 1;
+}
+
+message UserId {
+  string id = 1;
+}
+
+
+message User {
+  string name    = 1;
+	string user_id = 2;
+	int32  age     = 3;
+}
+
+message Users {
+  repeated User users = 1;
+}
